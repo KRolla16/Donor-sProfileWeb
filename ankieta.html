@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Krwiodawstwo</title>
+            
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+          
+    
+    
+    
+    </head>
+    <body>
+            <nav class="navbar navbar-expand-lg bg-dark text-white">
+                    <div class="container-fluid">
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a class="navbar-brand" style="color: whitesmoke; text-decoration-style: wavy;" href="#">
+                                    Aplikacja dla lekarzy
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" style="color: whitesmoke; text-decoration-style: wavy;" onclick="switchView('home.html')">
+                                    <span style="color: white">Home</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="nav-link" style="color: whitesmoke; text-decoration-style: wavy;" onclick="switchView('myblogs.html')">
+                                        <span style="color: white">Ankiety</span>
+                                </a>
+                            </li>
+                        </ul>
+        
+    
+                        <div class="dropdown navbar-right">
+                                <button 
+                                id="option-id"
+                                class="btn btn-light dropdown-toggle bg-dark text-white"
+                                type="button"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                >
+                                    Opcje
+                                </button>
+            
+                                <div
+                                class="dropdown-menu"
+                                aria-labelledby="option-id"
+                                >
+                                <a class="dropdown-item" id="btn-logout" href="#">
+                                    Wyloguj
+                                </a>
+                                <a class="dropdown-item" id="btn-survey" href="ankieta.html">
+                                        Ankiety
+                                    </a>
+                                 <a class="dropdown-item" id="btn-survey" href="myblogs.html">
+                                            Informacje
+                                        </a>
+                                 <a class="dropdown-item" id="btn-survey" href="dlapacjenta.html">
+                                                Info - pacjent
+                                            </a>
+                                                
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+<!---------------------Validation and uploading of Post Blogs Ends here------------------------->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyDlC7iOWgjfyDrZOtVvRiSolLC0cNQcsYE",
+      authDomain: "myapp-4b67f.firebaseapp.com",
+      databaseURL: "https://myapp-4b67f.firebaseio.com",
+      projectId: "myapp-4b67f",
+      storageBucket: "myapp-4b67f.appspot.com",
+      messagingSenderId: "400569258205",
+      appId: "1:400569258205:web:a7ddf7690530ca64188b34",
+      measurementId: "G-2E4SQD0XBN"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+  </script>
+        <script src="js/index.js"></script>
+        <script>
+            firebase.auth().onAuthStateChanged(function(user)
+            {
+                if(!user)
+                {
+                    window.location.href = "signin.html";
+                }
+            });
+        </script>
+
+
+<!-------------------After Blog Post Area------------------------->
+<br>
+<div class="text-center bg-light text-dark">
+    <h3>Ankiety</h3>
+</div>
+
+<hr>
+<br>
+
+<div class="row container-fluid bg-3">
+    <div class="col-sm-12" id="blogs">
+
+    </div>
+</div>
+
+<script>
+    var counter=0;
+</script>
+<br>
+<script>
+    //********************Retrieve and Display Data from Firebase**************************************
+    var user = firebase.auth().currentUser;
+    var dbBlogs = firebase.database().ref().child("Answers").orderByChild("counter");
+
+    dbBlogs.on("value", function(blogs)
+    {
+        if(blogs.exists())
+        {
+            var blogsHtml = "";
+
+            blogs.forEach(function(singleBlog)
+            {
+                counter = counter + 1;
+
+
+
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:black;'>"
+                                         + "Imię i nazwisko " + singleBlog.val().nameiName
+                                         + "</p> </div>" 
+                                         ;
+                        blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy już oddawał/a Pan/Pani krew? Jeżeli tak to w którym roku ostatnio? " + "</p> </div>" + singleBlog.val().pytanie1
+                                         + "</p> </div>" 
+                                         ;
+                     blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy czuje się Pan/Pani obecnie zdrowy/a?	 " + "</p> </div>" + singleBlog.val().pytanie2
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 7 dni przechodził/a Pan Pani jakieś zabiegi stomatologiczne?	 " + "</p> </div>" + singleBlog.val().pytanie3
+                                         + "</p> </div>" 
+                                         ;
+                                         
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 4 tygodni chorował/a Pan/Pani lub pozostawał/a pod opieką lekarza albo miał/a gorączkę powyższej 38 stopni?" + "</p> </div>" + singleBlog.val().pytanie4
+                                         + "</p> </div>" 
+                                         ;
+
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 4 tygodni przyjmował/a Pan/Pani lekarstwa (tabletki, zastrzyki, czopki, maści i inne). Jakie?" + "</p> </div>" + singleBlog.val().pytanie5
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 4 tygodni przechodził/a Pan/Pani szczepienia?	 " + "</p> </div>" + singleBlog.val().pytanie6
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy zauważył/a Pan/Pani u siebie następujące objawy: a) nieuzasadniony spadek ciężaru ciała, nieuzasadnioną gorączkę,powiększenie węzłów chłonnych? " + "</p> </div>" + singleBlog.val().pytanie7
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy choruje Pan/Pani bądź chorował/a na jedno z niżej wymienionych schorzeń, ewentualnie odczuwa lub odczuwał/a niżej wymienione dolegliwości? choroby układu krążenia (nadciśnienie), dolegliwości ze strony serca, zawał serca, duszność, udar mózgu, choroby skóry, wypryski/wysypka, uczulenia, katar sienny, astma, cukrzyca, choroby krwi, przedłużone krwawienia, choroby naczyń krwionośnych, choroby nerek, choroby układu pokarmowego, choroby płuc, choroby nerwowe, choroby tarczycy, padaczka, nowotwór, zapalenie szpiku, kiła, rzeżączka, toksoplazmoza, bruceloza, gruźlica, mononukleoza zakaźna, gorączka Q, gorączka Zachodniego Nilu" + "</p> </div>" + singleBlog.val().pytanie8
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy miał Pan/Pani wykonywaną gastroskopię, biopsję lub inne badanie diagnostyczne? " + "</p> </div>" + singleBlog.val().pytanie9
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy lub od czasu ostatniego oddania krwi chorował/a Pan/Pani ciężko albo przebył/a poważny zabieg operacyjny lub wypadek? " + "</p> </div>" + singleBlog.val().pytanie10
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy kiedykolwiek otrzymywał/a Pan/Pani transfuzje krwi lub jej składników? " + "</p> </div>" + singleBlog.val().pytanie11
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy kiedykolwiek był/a Pan/Pani biorcą przeszczepu (np. rogówki lub innych tkanek)? " + "</p> </div>" + singleBlog.val().pytanie12
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy kiedykolwiek otrzymywał/a Pan/Pani hormon wzrostu? " + "</p> </div>" + singleBlog.val().pytanie13
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy ktokolwiek z Pana/Pani rodziny cierpi lub cierpiał na chorobę Creutzfeldta-Jakoba? " + "</p> </div>" + singleBlog.val().pytanie14
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy Pan/Pani w okresie 01 stycznia 1980 roku do 31 grudnia 1996 roku przebywała łącznie przez okres 6 miesięcy lub dłużej w Wielkiej Brytanii, Francji lub Irlandii? " + "</p> </div>" + singleBlog.val().pytanie15
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 12 miesięcy przebywał Pan/Pani poza terenem Polski? " + "</p> </div>" + singleBlog.val().pytanie16
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy przebywał Pan/Pani w krajach Afryki Środkowej i Zachodniej lub w Tajlandii? " + "</p> </div>" + singleBlog.val().pytanie17
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy mieszkał/a Pan/Pani lub przebywał/a na terenach endemicznego występowania: malarii lub innych chorób tropikalnych. " + "</p> </div>" + singleBlog.val().pytanie18
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy chorował Pan/Pani na malarię, inne chorób tropikalnych. " + "</p> </div>" + singleBlog.val().pytanie19
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 28 dni przebywał Pan/Pani na terenach gdzie stwierdzono przypadki przeniesienia Wirusa Zachodniego Nilu na ludzi?	 " + "</p> </div>" + singleBlog.val().pytanie20
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy wykonywano u Pana/Pani: tatuaż, akupunkturę, depilację kosmetyczną, przekłucia uszu lub innych części ciała, zabiegi kosmetyczne z naruszeniem powłok skórnych?" + "</p> </div>" + singleBlog.val().pytanie21
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy lub od czasu ostatniego oddania krwi miał/a Pan/Pani przypadkowy kontakt z krwią ludzką lub narzędziami zanieczyszczonymi krwią ludzką? " + "</p> </div>" + singleBlog.val().pytanie22
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy kiedykolwiek przechodził/a Pan/Pani żółtaczkę? " + "</p> </div>" + singleBlog.val().pytanie23
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy Pana/Pani partner życiowy lub seksualny w ciągu ostatnich 6 miesięcy przechodził żółtaczkę? " + "</p> </div>" + singleBlog.val().pytanie24
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 12 miesięcy miał/a Pan/Pani kontakt z zakaźnie chorym?	 " + "</p> </div>" + singleBlog.val().pytanie25
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy przeczytał i zrozumiał Pan/Pani „Informację o chorobach zakaźnych dla krwiodawców”?" + "</p> </div>" + singleBlog.val().pytanie26
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w ciągu ostatnich 6 miesięcy przebywał/a na Pan/Pani w areszcie lub więzieniu?	 " + "</p> </div>" + singleBlog.val().pytanie27
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy kiedykolwiek zalecono Panu/Pani rezygnację z oddawania krwi?	" + "</p> </div>" + singleBlog.val().pytanie28
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy wykonuje Pan/Pani niebezpieczną pracę (np. kierowca autobusu, nurek) lub ma niebezpieczne hobby? " + "</p> </div>" + singleBlog.val().pytanie29
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy jest Pani obecnie w ciąży lub była w ciąży w ciągu ostatnich 12 miesięcy lub od czasu ostatniej donacji krwi? " + "</p> </div>" + singleBlog.val().pytanie30
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy Pani miesiączkuje? Jeżeli tak, to kiedy ostatnio?  " + "</p> </div>" + singleBlog.val().pytanie31
+                                         + "</p> </div>" 
+                                         ;
+
+                                         blogsHtml += "</div> <br>";
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Czy w latach 1965 – 1985 otrzymywała Pani zastrzyki hormonów w celu leczenia niepłodności?" + "</p> </div>" + singleBlog.val().pytanie32
+                                         + "</p> </div>" 
+                                         ;
+                                         blogsHtml += "</div> <br>";
+
+                        blogsHtml += "<div class='form-group' style='text-align: justify; color: black;'>";
+                            blogsHtml += "<button class='form-control btn btn-light bg-dark text-white' onclick=deleteblogRecord('"+singleBlog+"')>Usuń ankietę</button>";
+                        blogsHtml += "</div> <br>";
+
+                blogsHtml += "</div>";
+            });
+            $("#blogs").html(blogsHtml);
+        }
+    });
+
+
+    function deleteblogRecord(key)
+    {
+        var deleteRef = firebase.database().ref().child("Answers");
+
+        return deleteRef.remove()
+        .then(function()
+        {
+            console.log("Usunięto.");
+        })
+        .catch(function()
+        {
+            console.log("Błąd.")
+        });
+    }
+
+    //********************Ends Here -- Retrieve and Display Data from Firebase**************************************
+</script>
+<!---------------------Validation and uploading of Post Blogs Ends here------------------------->
+
+
+</body>

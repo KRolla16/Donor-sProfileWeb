@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <title>Ustawienia</title>
+        
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+                
+                
+                <!-- MATERIAL DESIGN ICONIC FONT -->
+            <link rel="stylesheet" href="design_files/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+                    
+                    <!-- STYLE CSS -->
+            <link rel="stylesheet" href="design_files/css/style.css">
+
+
+             </head>
+
+    <body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDlC7iOWgjfyDrZOtVvRiSolLC0cNQcsYE",
+    authDomain: "myapp-4b67f.firebaseapp.com",
+    databaseURL: "https://myapp-4b67f.firebaseio.com",
+    projectId: "myapp-4b67f",
+    storageBucket: "myapp-4b67f.appspot.com",
+    messagingSenderId: "400569258205",
+    appId: "1:400569258205:web:a7ddf7690530ca64188b34",
+    measurementId: "G-2E4SQD0XBN"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+
+        <div class="wrapper" style="background-image: url('design_files/images/registerback.jpg')">
+            
+            <div class="inner">
+                    <div class="image-holder">
+                        <img src="design_files/images/blood_O.png">
+                    </div>
+
+                    <form action="">
+                            <h3>Account Settings</h3>
+                            <div class="form-group">
+                                <input id="firstName"  type="text" placeholder="Imię" class="form-control">
+                                <input id="secondName"  type="text" placeholder="Nazwisko" class="form-control">
+                            </div>
+                            <div class="form-wrapper">
+                                   <select name="" id="bloodtype" class="form-control">
+                                       <option value="" disabled selected>Grupa krwi</option>
+                                       <option value="0+">0+</option>
+                                       <option value="0-">0-</option>
+                                       <option value="A+">A+</option>
+                                       <option value="A-">A-</option>
+                                       <option value="B+">B+</option>
+                                       <option value="B-">B-</option>
+                                       <option value="AB+">AB+</option>
+                                       <option value="AB-">AB-</option>
+                                   </select> 
+                                   <i class="zmdi zmdi-caret-down" style="font-size: 17px;"></i>
+                            </div>
+                            <div class="form-wrapper">
+                                    <input id="phone"  type="number" placeholder="Numer telefonu" class="form-control">
+                                    <i class="zmdi zmdi-tablet-mac"></i>
+                            </div>
+                            <div class="form-wrapper">
+                                    <select name="" id="gender" class="form-control">
+                                        <option value="" disabled selected>Płeć</option>
+                                        <option value="Male">Mężczyzna</option>
+                                        <option value="Female">Kobieta</option>
+                                        
+                                    </select> 
+                                    <i class="zmdi zmdi-caret-down" style="font-size: 17px;"></i>
+                             </div>
+                             <div class="form-wrapper">
+                                    <input id="address"  type="text" placeholder="Addres" class="form-control">
+                                    <i class="zmdi zmdi-pin"></i>
+                            </div>
+                            <div class="form-wrapper">
+                                    <input id="bio"  type="text" placeholder="Bio" class="form-control">
+                                    <i class="zmdi zmdi-account-box-mail"></i>
+                            </div>
+                            <div class="form-group container-login100-form-btn">
+                                <button id="btn-update" type="button">
+                                    Aktualizuj
+                                    <i class="zmdi zmdi-arrow-right"></i>
+                                </button>
+                            </div>
+                        </form>
+            </div>
+
+        </div>
+
+        <script src="js/index.js"></script>
+        <script>
+                firebase.auth().onAuthStateChanged(function(user)
+                {
+                    if(user)
+                    {
+                        var userID = firebase.auth().currentUser.uid;
+    
+                        firebase.database().ref('Lekarze/' + userID).once('value').then(function(snapshot)
+                        {
+                            if(snapshot.val())
+                            {
+                                window.location.href = "MainPage.html";
+                            }
+                        });  
+                    }
+                });
+            </script>
+
+    </body>
+</html>

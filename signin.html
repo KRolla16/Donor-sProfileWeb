@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+        
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+             
+        
+        <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link rel="stylesheet" href="design_files/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+            
+            <!-- STYLE CSS -->
+    <link rel="stylesheet" href="design_files/css/style.css">
+
+
+
+
+</head>
+
+<body>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDlC7iOWgjfyDrZOtVvRiSolLC0cNQcsYE",
+    authDomain: "myapp-4b67f.firebaseapp.com",
+    databaseURL: "https://myapp-4b67f.firebaseio.com",
+    projectId: "myapp-4b67f",
+    storageBucket: "myapp-4b67f.appspot.com",
+    messagingSenderId: "400569258205",
+    appId: "1:400569258205:web:a7ddf7690530ca64188b34",
+    measurementId: "G-2E4SQD0XBN"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+
+    <div class="wrapper" style="background-image: url('design_files/images/registerback.jpg');">
+ <div class="inner">
+<div class="image-holder">
+    <img src="design_files/images/blood_O.png">
+</div>
+<form action="">
+        <h3>Login</h3>
+        <div class="form-wrapper">
+            <input id="email" type="email" placeholder="Email Adress" class="form-control">
+            <i class="zmdi zmdi zmdi-email"></i>
+        </div>
+        <div class="form-wrapper">
+                <input id="password" type="password" placeholder="Password" class="form-control">
+                <i class="zmdi zmdi zmdi-lock"></i>
+        </div>
+    
+
+        <div class="form-group container-login100-form-btm">
+            <button id="btn-login" type="button">
+                Login
+                <i class="zmdi zmdi zmdi-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="w-full text-center p-t-27 p-b-239" style="margin-top:49%; font-size: 15px;">
+            <span class="text-muted">
+                Forgot
+            </span>   
+            <a href="forgetPassword.html" class="text-dark">
+                    username / password?
+                </a>
+                </div>
+
+        <div class="w-full text-center" style="margin-top:49%; font-size: 15px;">
+        <a href="signup.html" class="text-dark">
+            Not have an Account? Signup!
+        </a>
+        </div>
+    </form>
+ </div>
+
+    </div>
+
+    <script src="js/index.js"></script>
+
+    <script>
+            firebase.auth().onAuthStateChanged(function(user)
+            {
+                if(user)
+                {
+                    var userID = firebase.auth().currentUser.uid;
+
+                    firebase.database().ref('Lekarze/' + userID).once('value').then(function(snapshot)
+                    {
+                        if(snapshot.val())
+                        {
+                            window.location.href = "MainPage.html";
+                        }
+                        else
+                        {
+                            window.location.href = "accountSettings.html";
+                        }
+                    });  
+                }
+            });
+        </script>
+
+</body>
+</html>

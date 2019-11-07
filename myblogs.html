@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Krwiodawstwo</title>
+            
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+          
+    
+    
+    
+    </head>
+    <nav class="navbar navbar-expand-lg bg-dark text-white">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a class="navbar-brand" style="color: whitesmoke; text-decoration-style: wavy;" href="#">
+                            Aplikacja dla lekarzy
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" style="color: whitesmoke; text-decoration-style: wavy;" onclick="switchView('home.html')">
+                            <span style="color: white">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" style="color: whitesmoke; text-decoration-style: wavy;" onclick="switchView('myblogs.html')">
+                                <span style="color: white">Ankiety</span>
+                        </a>
+                    </li>
+                </ul>
+
+    
+                <div class="dropdown navbar-right">
+                        <button 
+                        id="option-id"
+                        class="btn btn-light dropdown-toggle bg-dark text-white"
+                        type="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        >
+                            Opcje
+                        </button>
+    
+                        <div
+                        class="dropdown-menu"
+                        aria-labelledby="option-id"
+                        >
+                        <a class="dropdown-item" id="btn-logout" href="#">
+                            Wyloguj
+                        </a>
+                        <a class="dropdown-item" id="btn-survey" href="ankieta.html">
+                                Ankiety
+                            </a>
+                         <a class="dropdown-item" id="btn-survey" href="myblogs.html">
+                                    Informacje
+                                </a>
+                         <a class="dropdown-item" id="btn-survey" href="dlapacjenta.html">
+                                        Info - pacjent
+                                    </a>
+                                        
+                        </div>
+                    </div>
+                </div>
+            </nav>
+<!---------------------Validation and uploading of Post Blogs Ends here------------------------->
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-analytics.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyDlC7iOWgjfyDrZOtVvRiSolLC0cNQcsYE",
+      authDomain: "myapp-4b67f.firebaseapp.com",
+      databaseURL: "https://myapp-4b67f.firebaseio.com",
+      projectId: "myapp-4b67f",
+      storageBucket: "myapp-4b67f.appspot.com",
+      messagingSenderId: "400569258205",
+      appId: "1:400569258205:web:a7ddf7690530ca64188b34",
+      measurementId: "G-2E4SQD0XBN"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+  </script>
+        <script src="js/index.js"></script>
+        <script>
+            firebase.auth().onAuthStateChanged(function(user)
+            {
+                if(!user)
+                {
+                    window.location.href = "signin.html";
+                }
+            });
+        </script>
+
+
+<!-------------------After Blog Post Area------------------------->
+<br>
+<div class="text-center bg-light text-dark">
+    <h3>Moje info</h3>
+</div>
+
+<hr>
+<br>
+
+<div class="row container-fluid bg-3">
+    <div class="col-sm-12" id="blogs">
+
+    </div>
+</div>
+
+<script>
+    var counter=0;
+</script>
+<br>
+<script>
+    //********************Retrieve and Display Data from Firebase**************************************
+    var user = firebase.auth().currentUser;
+    var dbBlogs = firebase.database().ref().child("Informacje").orderByChild("counter");
+
+    dbBlogs.on("value", function(blogs)
+    {
+        if(blogs.exists())
+        {
+            var blogsHtml = "";
+
+            blogs.forEach(function(singleBlog)
+            {
+                counter = counter + 1;
+
+                blogsHtml += "<div class='jumbotron bg-light text-dark border border-dark'>";
+                        blogsHtml += "<div> <img width='1000px' height='550px' src='";
+                            blogsHtml += singleBlog.val().image;
+                        blogsHtml += "'/> </div> <br>";
+
+                        blogsHtml += "<div class='row'>";
+                            blogsHtml += "<div class='col-sm-5'> <p style='color:grey;'>"
+                                         + "Published by: " + singleBlog.val().userName
+                                         + "</p> </div>"  + 
+
+                                         "<div class='col-sm-3'> <p style='color:grey;'>"
+                                         + "Time: " + singleBlog.val().time
+                                         + "</p> </div>"  +
+
+                                         "<div class='col-sm-4'> <p style='color:grey; margin-left: 75px;'>"
+                                         + "Date: " + singleBlog.val().date
+                                         + "</p> </div>"
+                                         ;
+                        blogsHtml += "</div> <br>";
+
+                        blogsHtml += "<div style='text-align: justify; color: black;'>";
+                            blogsHtml += singleBlog.val().desc;
+                        blogsHtml += "</div> <br>";
+
+                        
+                        blogsHtml += "<div class='form-group' style='text-align: justify; color: black;'>";
+                            blogsHtml += "<button class='form-control btn btn-light bg-dark text-white' onclick=deleteblogRecord('"+singleBlog.key+"')>Delete this Post</button>";
+                        blogsHtml += "</div> <br>";
+
+                blogsHtml += "</div>";
+            });
+            $("#blogs").html(blogsHtml);
+        }
+    });
+
+
+    function deleteblogRecord(key)
+    {
+        var deleteRef = firebase.database().ref().child("Informacje").child(key);
+
+        return deleteRef.remove()
+        .then(function()
+        {
+            console.log("Removed Successfully.");
+        })
+        .catch(function()
+        {
+            console.log("Error Occured.")
+        });
+    }
+
+    //********************Ends Here -- Retrieve and Display Data from Firebase**************************************
+</script>
+<!---------------------Validation and uploading of Post Blogs Ends here------------------------->
+</body>
